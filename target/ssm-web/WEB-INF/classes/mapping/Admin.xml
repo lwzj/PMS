@@ -6,7 +6,7 @@
         <result column="username" property="username" jdbcType="VARCHAR"/>
         <result column="password" property="password" jdbcType="VARCHAR"/>
     </resultMap>
-    <select id="getUser" parameterType="java.util.Map" resultMap="userResultMap">
+    <select id="getAdmin" parameterType="java.util.Map" resultMap="userResultMap">
         SELECT
           *
         FROM
@@ -14,4 +14,11 @@
         WHERE
         `username` = #{username} AND `password` = #{password};
     </select>
+    <update id="updatePwd" parameterType="java.util.Map">
+        UPDATE
+  `admin`
+SET
+  `password` = #{password}
+WHERE `id` = #{id} ;
+    </update>
 </mapper>

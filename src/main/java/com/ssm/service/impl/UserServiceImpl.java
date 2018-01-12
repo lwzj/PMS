@@ -31,4 +31,25 @@ public class UserServiceImpl implements IUserService {
     public List<User> queryUserByCarId(Map<String, Object> param) {
         return userDao.queryUserByCarId(param);
     }
+
+    public List<User> queryUserById(Map<String, Object> param) {
+        return userDao.queryUserById(param);
+    }
+
+    public int charger(Map<String, Object> param) {
+
+        List<User> users = userDao.queryUserById(param);
+        int money = Integer.parseInt(param.get("money").toString());
+        int m = users.get(0).getMoney() + money;
+        param.put("money",m);
+        return userDao.update(param);
+    }
+
+    public int updatePwd(Map<String, Object> param) {
+        return userDao.updatePwd(param);
+    }
+
+    public int updateInfo(Map<String, Object> param) {
+        return userDao.updateInfo(param);
+    }
 }

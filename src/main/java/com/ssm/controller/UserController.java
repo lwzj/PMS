@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -49,7 +50,69 @@ public class UserController {
         return object;
     }
 
+    /**
+     * 退出登录
+     *
+     * @param request
+     * @return
+     */
+    @RequestMapping("/logout")
+    public String logout(HttpServletRequest request) {
+        logger.info("logout begin ...");
+        JSONObject obj = new JSONObject();
+        request.getSession().removeAttribute("username");
+        obj.put("code", 200);
+        obj.put("message", "success");
+        request.getSession().removeAttribute("id");
+        return "./login";
+    }
+    /**
+     * 根据iD查找user
+     * @param request
+     * @return
+     */
+    @RequestMapping("/queryUserById")
+    @ResponseBody
+    public JSONObject queryUserById(HttpServletRequest request) {
+        logger.debug("login ...");
+        String id = (String) request.getSession().getAttribute("id");
+        JSONObject object = new JSONObject();
+        Map<String, Object> param = new HashMap<String, Object>();
+        param.put("id", id);
+        List<User> users = userService.getUser(param);
+        if (users.size() > 0) {
+            object.put("code", 200);
+            object.put("message", "success");
+            object.put("user", users.get(0));
+        }else{
+            object.put("code", 100);
+        }
+        return object;
+    }
 
+    /**
+     * 修改密码
+     * @param request
+     * @return
+     */
+    @RequestMapping("/updatePwd")
+    @ResponseBody
+    public JSONObject updatePwd(HttpServletRequest request) {
+        logger.debug("updatePwd ...");
+        String id = (String) request.getSession().getAttribute("id");
+        String data = request.getParameter("data");
+        JSONObject object = new JSONObject();
+        Map<String, Object> param = JsonUtil.getMapFromJson(data);
+        param.put("id", id);
+        int i = userService.updatePwd(param);
+        if (i > 0) {
+            object.put("code", 200);
+            object.put("message", "success");
+        }else{
+            object.put("code", 100);
+        }
+        return object;
+    }
 
 
     /**

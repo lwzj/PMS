@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 @Service("chargerService")
 public class ChargerServiceImpl implements IChargerService{
@@ -14,5 +15,9 @@ public class ChargerServiceImpl implements IChargerService{
     private IChargerDao chargerDao;
     public List<Charger> queryAll() {
         return chargerDao.queryAll();
+    }
+
+    public int charger(Map<String, Object> param) {
+        return chargerDao.update(param);
     }
 }

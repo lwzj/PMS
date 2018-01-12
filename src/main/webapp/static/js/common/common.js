@@ -93,7 +93,42 @@ Date.prototype.pattern=function(fmt) {
         }         
     }         
     return fmt;         
-}     
+}
+
+function carType(carType){
+    var carTypeName;
+    switch(carType){
+        case "c1":
+            carTypeName="普通会员";
+            break;
+        case "c2":
+            carTypeName="黄金会员";
+            break;
+        case "c3":
+            carTypeName="铂金会员";
+            break;
+        case "c4":
+            carTypeName="钻石会员";
+            break;
+    }
+    return carTypeName;
+}
+
+function stationType(stationType){
+    var stationTypeName;
+    switch(stationType){
+        case "s1":
+            stationTypeName="普通车位";
+            break;
+        case "s2":
+            stationTypeName="中等车位";
+            break;
+        case "s3":
+            stationTypeName="高级车位";
+            break;
+    }
+    return stationTypeName;
+}
 
 function subDate(date1){
 	var cTime;

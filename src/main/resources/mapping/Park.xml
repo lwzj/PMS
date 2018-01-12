@@ -9,17 +9,59 @@
         <result column="endpark" property="endpark" jdbcType="TIMESTAMP"/>
         <result column="fee" property="fee" jdbcType="INTEGER"/>
     </resultMap>
+    <resultMap id="resultMapDta" type="com.ssm.bean.dto.ParkDTA">
+        <result column="id" property="id" jdbcType="INTEGER"/>
+        <result column="carId" property="carId" jdbcType="VARCHAR"/>
+        <result column="stationid" property="stationid" jdbcType="INTEGER"/>
+        <result column="startpark" property="startpark" jdbcType="TIMESTAMP"/>
+    </resultMap>
     <select id="queryAll" parameterType="java.util.Map" resultMap="resultMap">
         SELECT
           *
         FROM
           `park`
+          WHERE startpark IS NOT NULL AND endpark IS NOT NULL
     </select>
-    <select id="queryUserByCarId" parameterType="java.util.Map" resultMap="resultMap">
+    <select id="queryParking" parameterType="java.util.Map" resultMap="resultMapDta">
         SELECT
           *
         FROM
           `park`
-          WHERE `carId` LIKE CONCAT('%',#{carId},'%');
+          WHERE startpark IS NOT NULL AND endpark IS NULL
     </select>
+    <select id="queryParkByCarId" parameterType="java.util.Map" resultMap="resultMap">
+        SELECT
+          *
+        FROM
+          `park`
+          WHERE `carId` LIKE CONCAT('%',#{carId},'%') AND startpark IS NOT NULL AND endpark IS NOT NULL;
+    </select>
+    <select id="queryParkingByCarId" parameterType="java.util.Map" resultMap="resultMap">
+        SELECT
+          *
+        FROM
+          `park`
+          WHERE `carId` LIKE CONCAT('%',#{carId},'%') AND startpark IS NOT NULL AND endpark IS NULL;
+    </select>
+    <insert id="tingche" parameterType="java.util.Map">
+        INSERT INTO `park` (
+  `carId`,
+  `stationid`,
+  `startpark`
+)
+VALUES
+  (
+    #{carId},
+    #{stationid},
+    #{startpark}
+  ) ;
+    </insert>
+    <update id="chuche" parameterType="java.util.Map">
+        UPDATE
+  `park`
+SET
+  `endpark` = #{endpark},
+  fee = #{fee}
+WHERE `id` = #{id} ;
+    </update>
 </mapper>

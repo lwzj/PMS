@@ -1,15 +1,11 @@
 package com.ssm.controller;
 
-import com.ssm.bean.Admin;
-import com.ssm.bean.Charger;
-import com.ssm.bean.Park;
-import com.ssm.bean.User;
-import com.ssm.service.IAdminService;
-import com.ssm.service.IChargerService;
-import com.ssm.service.IParkService;
-import com.ssm.service.IUserService;
+import com.ssm.bean.*;
+import com.ssm.bean.dto.ParkDTA;
+import com.ssm.service.*;
 import com.ssm.util.JsonUtil;
 import net.sf.json.JSONObject;
+import net.sf.json.util.JSONUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +29,9 @@ public class AdminController {
     private IParkService parkService;
     @Autowired
     private IChargerService chargerService;
+    @Autowired
+    private ISitInfoService sitInfoService;
+
     /**
      * 登录
      */
@@ -50,13 +49,118 @@ public class AdminController {
             object.put("uid", admin.get(0).getId());
             object.put("username", admin.get(0).getUsername());
             request.getSession().setAttribute("id", admin.get(0).getId());
-            request.getSession().setAttribute("username", admin.get(0).getUsername());
+            request.getSession().setAttribute("admin", admin.get(0).getUsername());
         } else {
             object.put("code", 100);
             object.put("message", "用户名密码错误");
         }
         return object;
     }
+
+    /**
+     * 修改用户信息
+     */
+    @RequestMapping("/updateInfo")
+    @ResponseBody
+    public JSONObject updateInfo(HttpServletRequest request) {
+        logger.debug(" updateInfo ...");
+        String data = request.getParameter("data");
+        JSONObject object = new JSONObject();
+        Map<String, Object> param = JsonUtil.getMapFromJson(data);
+        int i = userService.updateInfo(param);
+        if (i > 0) {
+            object.put("code", 200);
+            object.put("message", "success");
+        } else {
+            object.put("code", 100);
+            object.put("message", "失败");
+        }
+        return object;
+    }
+
+    /**
+     * 退出登录
+     *
+     * @param request
+     * @return
+     */
+    @RequestMapping("/logout")
+    public String logout(HttpServletRequest request) {
+        logger.info("logout begin ...");
+        JSONObject obj = new JSONObject();
+        request.getSession().removeAttribute("username");
+        obj.put("code", 200);
+        obj.put("message", "success");
+        request.getSession().removeAttribute("id");
+        return "./login_manager";
+    }
+
+    /**
+     * 修改密码
+     * @param request
+     * @return
+     */
+    @RequestMapping("/updatePwd")
+    @ResponseBody
+    public JSONObject updatePwd(HttpServletRequest request) {
+        logger.debug("updatePwd ...");
+        String id = (String) request.getSession().getAttribute("id");
+        String data = request.getParameter("data");
+        JSONObject object = new JSONObject();
+        Map<String, Object> param = JsonUtil.getMapFromJson(data);
+        param.put("id", id);
+        int i = adminService.updatePwd(param);
+        if (i > 0) {
+            object.put("code", 200);
+            object.put("message", "success");
+        }else{
+            object.put("code", 100);
+        }
+        return object;
+    }
+    /**
+     * 停车
+     */
+    @RequestMapping("/tingche")
+    @ResponseBody
+    public JSONObject tingche(HttpServletRequest request) {
+        logger.debug("tingche ...");
+        String data = request.getParameter("data");
+        JSONObject object = new JSONObject();
+        Map<String, Object> param = JsonUtil.getMapFromJson(data);
+        int i = parkService.tingche(param);
+        if (i != 0) {
+            object.put("code", 200);
+            object.put("message", "注册成功");
+        } else {
+            object.put("code", 100);
+            object.put("message", "注册失败");
+        }
+        return object;
+    }
+
+    /**
+     * 出车
+     */
+    @RequestMapping("/chuche")
+    @ResponseBody
+    public JSONObject chuche(HttpServletRequest request) {
+        logger.debug("chuche ...");
+        String data = request.getParameter("data");
+        JSONObject object = new JSONObject();
+        Map<String, Object> param = JsonUtil.getMapFromJson(data);
+        Park park = parkService.chuche(param);
+        if (park !=null) {
+            object.put("code", 200);
+            object.put("message", "出车成功");
+            object.put("fee", park.getFee());
+        } else {
+            object.put("code", 100);
+            object.put("message", "出车成功");
+        }
+        return object;
+    }
+
 
     /**
      * 用户注册
@@ -107,7 +211,7 @@ public class AdminController {
             object.put("message", "success");
             object.put("parks", parks);
             object.put("size", parks.size());
-        }else{
+        } else {
             object.put("code", 100);
             object.put("message", "暂无数据");
         }
@@ -126,7 +230,7 @@ public class AdminController {
         List<Park> parks;
         if (param.get("carId").equals("")) {
             parks = parkService.queryAll();
-        }else {
+        } else {
             parks = parkService.queryUserByCarId(param);
         }
         if (parks.size() != 0) {
@@ -134,7 +238,7 @@ public class AdminController {
             object.put("message", "success");
             object.put("parks", parks);
             object.put("size", parks.size());
-        }else{
+        } else {
             object.put("code", 100);
             object.put("message", "暂无数据");
         }
@@ -154,7 +258,7 @@ public class AdminController {
             object.put("message", "success");
             object.put("users", users);
             object.put("size", users.size());
-        }else{
+        } else {
             object.put("code", 100);
             object.put("message", "暂无数据");
         }
@@ -169,11 +273,11 @@ public class AdminController {
     public JSONObject queryUserByCarId(HttpServletRequest request) {
         String data = request.getParameter("data");
         Map<String, Object> param = JsonUtil.getMapFromJson(data);
-        List<User> users ;
+        List<User> users;
         JSONObject object = new JSONObject();
         if (param.get("carId").equals("")) {
             users = userService.queryAll();
-        }else {
+        } else {
             users = userService.queryUserByCarId(param);
         }
         if (users.size() != 0) {
@@ -181,7 +285,30 @@ public class AdminController {
             object.put("message", "success");
             object.put("users", users);
             object.put("size", users.size());
-        }else{
+        } else {
+            object.put("code", 100);
+            object.put("message", "暂无数据");
+        }
+        return object;
+    }
+
+    /**
+     * 按车牌号查询用户信细
+     */
+    @RequestMapping("queryUserById")
+    @ResponseBody
+    public JSONObject queryUserById(HttpServletRequest request) {
+        String data = request.getParameter("data");
+        Map<String, Object> param = JsonUtil.getMapFromJson(data);
+        List<User> users;
+        JSONObject object = new JSONObject();
+        users = userService.queryUserById(param);
+        if (users.size() != 0) {
+            object.put("code", 200);
+            object.put("message", "success");
+            object.put("users", users);
+            object.put("size", users.size());
+        } else {
             object.put("code", 100);
             object.put("message", "暂无数据");
         }
@@ -191,10 +318,44 @@ public class AdminController {
     /**
      * 查询当前可用车位信息
      */
+    @RequestMapping("querySit")
+    @ResponseBody
+    public JSONObject querySit(HttpServletRequest request) {
+        JSONObject object = new JSONObject();
+        List<SitInfor> sitInfors;
+        sitInfors = sitInfoService.queryFree();
+        if (sitInfors.size() != 0) {
+            object.put("code", 200);
+            object.put("message", "success");
+            object.put("sitInfors", sitInfors);
+            object.put("size", sitInfors.size());
+        } else {
+            object.put("code", 100);
+            object.put("message", "暂无数据");
+        }
+        return object;
+    }
 
     /**
      * 查询当前在场信息
      */
+    @RequestMapping("queryParking")
+    @ResponseBody
+    public JSONObject queryParking(HttpServletRequest request) {
+        JSONObject object = new JSONObject();
+        List<ParkDTA> parks;
+        parks = parkService.queryParking();
+        if (parks.size() != 0) {
+            object.put("code", 200);
+            object.put("message", "success");
+            object.put("parks", parks);
+            object.put("size", parks.size());
+        } else {
+            object.put("code", 100);
+            object.put("message", "暂无数据");
+        }
+        return object;
+    }
 
     /**
      * 查询计费标准
@@ -209,7 +370,7 @@ public class AdminController {
             object.put("message", "success");
             object.put("chargers", chargers);
             object.put("size", chargers.size());
-        }else{
+        } else {
             object.put("code", 100);
             object.put("message", "暂无数据");
         }
@@ -217,7 +378,22 @@ public class AdminController {
     }
 
     /**
-     * 查询车辆历史记录
+     * 充值
      */
+    @RequestMapping("charger")
+    @ResponseBody
+    public JSONObject charger(HttpServletRequest request) {
+        String data = request.getParameter("data");
+        Map<String, Object> param = JsonUtil.getMapFromJson(data);
+        JSONObject object = new JSONObject();
+       int i = userService.charger(param);
+        if (i != 0) {
+            object.put("code", 200);
+            object.put("message", "success");
+        } else {
+            object.put("code", 100);
+        }
+        return object;
+    }
 }
 

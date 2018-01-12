@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ssm.dao.ISitInforDao">
+    <resultMap id="resultMap" type="com.ssm.bean.SitInfor">
+        <result column="stationid" property="stationid" jdbcType="INTEGER"/>
+        <result column="stationtype" property="stationtype" jdbcType="VARCHAR"/>
+    </resultMap>
+    <select id="queryFree" parameterType="java.util.Map" resultMap="resultMap">
+        SELECT
+          *
+        FROM
+          `sitinfor`
+          WHERE
+          stationid not in
+  (
+	select stationid from park where startpark IS NOT NULL AND endpark IS NULL
+  )
+    </select>
+    <select id="queryByStationid" parameterType="java.util.Map" resultMap="resultMap">
+        SELECT
+          *
+        FROM
+          `sitinfor`
+          WHERE
+          stationid = #{stationid}
+    </select>
+
+</mapper>

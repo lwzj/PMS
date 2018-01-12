@@ -25,9 +25,9 @@ public class DateUtil {
 	 * @param str
 	 * @return
 	 */
-    public static Long dateDiff(String startTime, String endTime) {   
+    public static Long dateDiff(String startTime, String endTime) {
         // 按照传入的格式生成一个simpledateformate对象    
-        SimpleDateFormat sd = new SimpleDateFormat(FORMAT);    
+        SimpleDateFormat sd = new SimpleDateFormat(FORMAT);
         long ns = 1000;// 一秒钟的毫秒数    
         long diff;    
         long sec = 0;    
@@ -35,15 +35,15 @@ public class DateUtil {
         try {    
             diff = sd.parse(endTime).getTime() - sd.parse(startTime).getTime();    
             sec = diff / ns;// 计算差多少秒    
-        } catch (ParseException e) {    
+        } catch (ParseException e) {
             e.printStackTrace();    
         }    
         return sec;
     }  
     
-    public static String TimeStamp2Date(String timestampString){    
-    	  Long timestamp = Long.parseLong(timestampString)*1000;    
-    	  String date = new SimpleDateFormat(FORMAT).format(new Date(timestamp));
+    public static String TimeStamp2Date(String timestampString){
+    	  Long timestamp = Long.parseLong(timestampString)*1000;
+    	  String date = new SimpleDateFormat(FORMAT).format(new java.util.Date(timestamp));
     	  return date;    
     	} 
 }

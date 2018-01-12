@@ -32,4 +32,59 @@
         FROM
           `user`
     </select>
+<select id="queryUserById" parameterType="java.util.Map" resultMap="userResultMap">
+        SELECT
+          *
+        FROM
+          `user`
+          WHERE id = #{id}
+    </select>
+
+    <insert id="addUser" parameterType="java.util.Map">
+        insert into `user` (
+  `username`,
+  `password`,
+  `carId`,
+  `tel`,
+  `usertype`
+)
+values
+  (
+    #{username},
+    #{password},
+    #{carId},
+    #{tel},
+    #{usertype}
+  ) ;
+
+    </insert>
+
+    <update id="update" parameterType="java.util.Map">
+        UPDATE
+  `user`
+SET
+  `money` = #{money}
+WHERE `id` =#{id} ;
+
+    </update>
+     <update id="updatePwd" parameterType="java.util.Map">
+        UPDATE
+  `user`
+SET
+  `password` = #{password}
+WHERE `id` =#{id} ;
+
+    </update>
+<update id="updateInfo" parameterType="java.util.Map">
+        UPDATE
+  `user`
+SET
+  `username` = #{username},
+  `carId` = #{carId},
+  `tel` = #{tel},
+  `usertype` = #{usertype}
+WHERE `id` =#{id} ;
+
+    </update>
+
 </mapper>

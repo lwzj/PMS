@@ -13,4 +13,21 @@
         FROM
           `charger`
     </select>
+    <select id="queryOne" parameterType="java.util.Map" resultMap="resultMap">
+        SELECT
+          *
+        FROM
+          `charger`
+          WHERE
+          cardtype = #{cardtype}
+          AND
+          stationtype = #{stationtype}
+    </select>
+    <update id="update" parameterType="java.util.Map">
+        update
+  `pms`.`charger`
+set
+  `charge` = #{charge}
+where `cardtype` = #{cardtype} AND  `stationtype` = #{stationtype};
+    </update>
 </mapper>

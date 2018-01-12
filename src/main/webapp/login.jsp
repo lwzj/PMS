@@ -30,7 +30,7 @@ function login(){
 	var s=$("#j-pwd").val();
 	
 	 var data = "{'tel':"+e+",'password':'"+s+"'}";
-	 var url = URL+"index_user.jsp";
+	 var url = URL+"index2.jsp";
 	$.ajax({
 		 url: URL+"user/login",
 		 type: "POST",
@@ -72,8 +72,7 @@ function login(){
 			<a href="javascript:;" id="j-login-btn" class="login_btn" onclick="login()">登录</a>
 			<div class="login_hint clearfix">
 				<!-- <a href="forget.html~forget.html" class="forget_pwd float_left">忘记密码？</a> -->
-				<a href="register.jsp" class="skip_register float_right">注册账号></a>
-				<a href="forgotPWD.jsp" class="skip_register float_left">忘记密码?</a>
+				<%--<a href="forgotPWD.jsp" class="skip_register float_left">忘记密码?</a>--%>
 			</div>
 			<div id="j-login-fall" class="login_fall">密码错误</div>
 		</div>

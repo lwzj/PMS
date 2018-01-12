@@ -15,4 +15,12 @@ public interface IUserDao {
     List<User> findAll();
 
     List<User> queryUserByCarId(Map<String, Object> param);
+
+    List<User> queryUserById(Map<String, Object> param);
+
+    int update(Map<String, Object> param);
+
+    int updatePwd(Map<String, Object> param);
+
+    int updateInfo(Map<String, Object> param);
 }

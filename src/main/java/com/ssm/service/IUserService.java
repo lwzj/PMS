@@ -14,4 +14,12 @@ public interface IUserService {
     List<User> queryAll();
 
     List<User> queryUserByCarId(Map<String, Object> param);
+
+    List<User> queryUserById(Map<String, Object> param);
+
+    int charger(Map<String, Object> param);
+
+    int updatePwd(Map<String, Object> param);
+
+    int updateInfo(Map<String, Object> param);
 }

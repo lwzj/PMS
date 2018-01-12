@@ -7,4 +7,6 @@ import java.util.Map;
 
 public interface IAdminService {
     List<Admin> getAdmin(Map<String, Object> param);
+
+    int updatePwd(Map<String, Object> param);
 }

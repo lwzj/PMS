@@ -12,6 +12,23 @@ public class Park {
     private Date startpark;
     //出库时间
     private Date endpark;
+
+    public Date getStartpark() {
+        return startpark;
+    }
+
+    public void setStartpark(Date startpark) {
+        this.startpark = startpark;
+    }
+
+    public Date getEndpark() {
+        return endpark;
+    }
+
+    public void setEndpark(Date endpark) {
+        this.endpark = endpark;
+    }
+
     //消费
     private int fee;
 

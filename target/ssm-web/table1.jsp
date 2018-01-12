@@ -1,5 +1,6 @@
-﻿<%@ page contentType="text/html;charset=UTF-8" language="java" %>
-
+﻿<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page isELIgnored="false"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -54,6 +55,7 @@
     </script>
 </head>
 <body onload="queryPark()">
+<c:if test="${not empty admin}">
     <div id="wrapper">
         <nav class="navbar navbar-default top-navbar" role="navigation">
             <div class="navbar-header">
@@ -63,7 +65,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="index.jsp"><i class="fa fa-gear"></i> <strong>HYBRID</strong></a>
+                <a class="navbar-brand" href="index.jsp"><i class="fa fa-gear"></i> <strong>PARK</strong></a>
             </div>
 
             <ul class="nav navbar-top-links navbar-right">
@@ -72,12 +74,12 @@
                         <i class="fa fa-user fa-fw"></i> <i class="fa fa-caret-down"></i>
                     </a>
                     <ul class="dropdown-menu dropdown-user">
-                        <li><a href="#"><i class="fa fa-user fa-fw"></i> User Profile</a>
+                        <li><a href="regist.jsp"><i class="fa fa-user fa-fw"></i>信息维护</a>
                         </li>
-                        <li><a href="#"><i class="fa fa-gear fa-fw"></i> Settings</a>
+                        <li><a href="#"><i class="fa fa-gear fa-fw"></i>系统管理</a>
                         </li>
                         <li class="divider"></li>
-                        <li><a href="#"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
+                        <li><a href="/logout2"><i class="fa fa-sign-out fa-fw"></i>退出</a>
                         </li>
                     </ul>
                     <!-- /.dropdown-user -->
@@ -174,6 +176,10 @@
     </div>
              <!-- /. PAGE INNER  -->
             </div>
+</c:if>
+<c:if test="${empty admin}">
+    你的权限不足或者没有<<a href="login_manager.jsp">登录</a>
+</c:if>
          <!-- /. PAGE WRAPPER  -->
      <!-- /. WRAPPER  -->
     <!-- JS Scripts-->
